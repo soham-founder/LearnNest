@@ -1,7 +1,8 @@
-<<<<<<< HEAD
-## LearnNest — Quizzes with AI
+# 📘 LearnNest
 
-This app uses React + TypeScript + Vite on the frontend and Firebase Functions for the AI quiz pipeline.
+**LearnNest – AI + Productivity for Students**  
+An intelligent learning and wellness platform that merges **adaptive tutoring**, **productivity tools**, **spaced repetition flashcards**, **peer learning**, and **mental health support** — all in one ecosystem.  
+
 
 Key features:
 - Generate validated quizzes from pasted text, your notes, or PDFs/DOCX (PDF built-in, DOCX optional)
