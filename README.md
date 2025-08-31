@@ -1,0 +1,50 @@
+## LearnNest — Quizzes with AI
+
+This app uses React + TypeScript + Vite on the frontend and Firebase Functions for the AI quiz pipeline.
+
+Key features:
+- Generate validated quizzes from pasted text, your notes, or PDFs/DOCX (PDF built-in, DOCX optional)
+- Chunking for large inputs, multilingual output, accessibility phrasing
+- RAG optional (Pinecone), Gemini validation, hints, and personalized feedback
+
+### Prerequisites
+- Node 18+
+- Firebase CLI (logged in and set to the right project)
+- Firebase project upgraded to Blaze plan for Cloud Functions deploy (Cloud Build/Artifact Registry)
+
+### Frontend dev
+```bash
+npm install
+npm run dev
+```
+
+### Functions dev and deploy
+Set required runtime config:
+```bash
+cd functions
+npm install
+# Required
+firebase functions:config:set openai.key="YOUR_OPENAI_KEY" gemini.key="YOUR_GEMINI_KEY"
+# Optional RAG
+firebase functions:config:set pinecone.key="YOUR_PINECONE_KEY"
+```
+
+Local build/emulate:
+```bash
+cd functions
+npm run build
+firebase emulators:start --only functions
+```
+
+Deploy (requires Blaze plan):
+```bash
+cd functions
+npm run deploy
+```
+
+### Notes
+- DOCX parsing via `mammoth` is optional. To enable:
+```bash
+cd functions && npm i mammoth
+```
+- If Pinecone isn’t configured, RAG is skipped gracefully.

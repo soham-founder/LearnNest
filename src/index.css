@@ -1,0 +1,80 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600;700;800;900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@100;200;300;400;500;600;700;800;900&display=swap');
+@import "tailwindcss";
+
+:root {
+  --primary-sky-blue: #3b82f6;
+  --secondary-green: #10b981;
+  --accent-warm-orange: #f59e0b;
+}
+
+@layer base {
+  html {
+    font-family: 'Inter', system-ui, sans-serif;
+    background-color: #262728;
+    color: #f1f5f9;
+    scroll-behavior: smooth;
+  }
+  body {
+    min-height: 100vh;
+    background-color: #262728;
+    color: #f1f5f9;
+    margin: 0;
+    padding: 0;
+  }
+  #root {
+    min-height: 100vh;
+    background-color: #262728;
+  }
+  h1, h2, h3, h4, h5, h6 {
+    font-family: 'Poppins', sans-serif;
+  }
+  code {
+    font-family: 'JetBrains Mono', monospace;
+  }
+}
+
+@layer utilities {
+  .bg-charcoal {
+    background-color: #262728;
+  }
+  .bg-charcoal-light {
+    background-color: #363738;
+  }
+  .bg-charcoal-dark {
+    background-color: #1a1b1c;
+  }
+  .text-primary {
+    color: var(--primary-sky-blue);
+  }
+  .bg-primary-sky-blue {
+    background-color: var(--primary-sky-blue);
+  }
+  .bg-secondary-green {
+    background-color: var(--secondary-green);
+  }
+  .line-clamp-2 {
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+  .line-clamp-3 {
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+}
+
+/* KaTeX styles for LaTeX rendering */
+@import 'katex/dist/katex.min.css';
+
+/* Markdown defaults */
+.markdown p { margin: 0.5rem 0; }
+.markdown ul { list-style: disc; padding-left: 1.25rem; }
+.markdown ol { list-style: decimal; padding-left: 1.25rem; }
+.markdown code { background: rgba(255,255,255,0.06); padding: 0.1rem 0.25rem; border-radius: 4px; }
+.markdown pre { background: rgba(255,255,255,0.06); padding: 0.75rem; border-radius: 8px; overflow: auto; }

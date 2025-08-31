@@ -1,0 +1,90 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    function isSignedIn() { return request.auth != null; }
+    function getDeck(deckId) {
+      return get(/databases/$(database)/documents/decks/$(deckId));
+    }
+    function isDeckOwner(deckId) {
+      return isSignedIn() && request.auth.uid == getDeck(deckId).data.createdBy;
+    }
+    function isDeckCollaborator(deckId) {
+      return isSignedIn() && getDeck(deckId).data.collaborators[request.auth.uid] != null;
+    }
+    function isDeckEditor(deckId) {
+      return isSignedIn() && (isDeckOwner(deckId) || getDeck(deckId).data.collaborators[request.auth.uid] == 'editor' || getDeck(deckId).data.collaborators[request.auth.uid] == 'admin');
+    }
+    function isDeckAdmin(deckId) {
+      return isSignedIn() && (isDeckOwner(deckId) || getDeck(deckId).data.collaborators[request.auth.uid] == 'admin');
+    }
+
+    // Top-level decks collection
+    match /decks/{deckId} {
+      allow create: if isSignedIn();
+      allow read: if isDeckOwner(deckId) || isDeckCollaborator(deckId);
+      allow update: if isDeckAdmin(deckId) || (isDeckEditor(deckId) && !('settings' in request.resource.data || 'collaborators' in request.resource.data));
+      allow delete: if isDeckAdmin(deckId);
+
+      // Cards subcollection under decks
+      match /cards/{cardId} {
+        allow read: if isDeckOwner(deckId) || isDeckCollaborator(deckId);
+        allow write: if isDeckEditor(deckId);
+      }
+    }
+
+    // User-specific collections (notes, chats, tasks, quizzes) remain under users/{userId}
+    match /users/{userId} {
+      allow read, write: if isSignedIn() && request.auth.uid == userId;
+
+      match /notes/{noteId} {
+        allow read, write: if request.auth.uid == resource.data.createdBy;
+      }
+
+      match /chats/{chatId} {
+        allow read, write: if isSignedIn() && request.auth.uid == userId;
+      }
+
+      match /tasks/{taskId} {
+        allow read, write: if isSignedIn() && request.auth.uid == userId;
+      }
+
+      match /quizzes/{quizId} {
+        allow read, write: if isSignedIn() && request.auth.uid == userId;
+      }
+
+      // Mock interviews sessions under user
+      match /mockInterviews/{sessionId} {
+        allow read, write: if isSignedIn() && request.auth.uid == userId;
+      }
+
+      // Tutor feature: sessions, messages, memory live under the user document
+      match /tutorSessions/{sessionId} {
+        allow read, write: if isSignedIn() && request.auth.uid == userId;
+
+        match /messages/{messageId} {
+          allow read, write: if isSignedIn() && request.auth.uid == userId;
+        }
+      }
+
+      // Optional: user-scoped tutor memory store
+      match /tutorMemory/{memoryId} {
+        allow read, write: if isSignedIn() && request.auth.uid == userId;
+      }
+    }
+
+    // Immutable audit logs for Tutor – top-level collection
+    match /tutorAuditLogs/{logId} {
+      // Only allow creation by the signed-in user for their own log entries.
+      allow create: if isSignedIn() && request.resource.data.userId == request.auth.uid;
+      // Users may read only their own logs.
+      allow read: if isSignedIn() && resource.data.userId == request.auth.uid;
+      // No updates or deletes to preserve immutability.
+      allow update, delete: if false;
+    }
+
+    // Analytics – should be written by backend only; deny all client access
+    match /tutorAnalytics/{docId} {
+      allow read, write: if false;
+    }
+  }
+}
