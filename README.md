@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 ## LearnNest — Quizzes with AI
 
 This app uses React + TypeScript + Vite on the frontend and Firebase Functions for the AI quiz pipeline.
@@ -48,3 +49,7 @@ npm run deploy
 cd functions && npm i mammoth
 ```
 - If Pinecone isn’t configured, RAG is skipped gracefully.
+=======
+# LearnNest
+LearnNest – AI + Productivity for Students. An intelligent learning and wellness platform that merges adaptive tutoring, focus/productivity tools (Pomodoro, task management, habit tracking), spaced repetition flashcards, peer learning, and mental health support — all in one ecosystem.
+>>>>>>> 2c4bc704ee66631205ee0a9b9070248057c1e2d3
